@@ -19,6 +19,15 @@ ArticleSchema = new mongoose.Schema({
     },
     nanoID: {
         type: String,
+    },
+    comment: {
+        type: Number,
+    },
+    like: {
+        type: Number,
+    },
+    dislike: {
+        type: Number,
     }
 });
 
