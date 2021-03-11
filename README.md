@@ -61,3 +61,35 @@ Now You can run the server and see it on localhost:3000
 ```
 npm start
 ```
+
+## Update React
+
+#### You can customize your frontend in client folder !
+
+Customize React ( you should open second terminal to run backend while dev !)
+
+```
+// terminal 1 (React)
+cd client
+npm start
+
+// terminal 2 (Node.js)
+npm start
+```
+
+After dev, Build frontend before deploy !
+
+```
+// at client folder
+npm run build
+```
+
+Done ! Now You can run the server and see it on localhost:3000
+
+```
+npm start
+```
+
+
+
+
