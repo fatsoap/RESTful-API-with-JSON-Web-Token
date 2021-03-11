@@ -10,7 +10,7 @@ const { checkJWT, getJWT } = require('./controllers/app_controller')
 const Article = require('./modals/Article');
 const Comment = require('./modals/Comment');
 
-app.use(express.static(path.join(__dirname, "./build")));
+app.use(express.static(path.join(__dirname, "./client/build")));
 app.use(express.json());
 app.use(methodOverride('_method'));
 
@@ -99,7 +99,7 @@ app.delete('/api/comment', checkJWT, (req, res) => {
 });
 
 app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, './build/index.html'));
+    res.sendFile(path.join(__dirname, './client/build/index.html'));
 })
 
 app.listen(PORT, () => console.log(`Server start on ${PORT}`));
