@@ -1,10 +1,11 @@
-const jwt = require('jsonwebtoekn');
+const jwt = require('jsonwebtoken');
+const SECRET_JWT = process.env.SECRET_JWT;
 
 function getJWT(req, res, next){
     var data = req.body;
     jwt.sign(data, SECRET_JWT, { expiresIn: '10min'}, (err, token) => {
         if(err) {
-            res.send({  flashMessage: "jwt generate fail", type: "danger" });
+            res.send({ token: {}, flashMessage: "jwt generate fail", type: "danger" });
             return;
         } else {
             req.token = token;
@@ -23,5 +24,10 @@ function checkJWT(req, res, next){
             next();
         }
     })
+}
+
+module.exports = {
+    getJWT,
+    checkJWT
 }
 

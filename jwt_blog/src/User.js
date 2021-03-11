@@ -1,28 +1,23 @@
 import React from 'react';
 import faker from 'faker';
 
-const User = ({ login }) => {
+const User = ({ login, logout, user}) => {
 
-    const [user, setUser] = React.useState({
-        name: "",
-        avatar: "",
-        description: "",
-    });
+    
 
     const onLogin = () => {
         var name = faker.name.firstName() + " " + faker.name.lastName();
-        var avatar = faker.image.people();
+        var avatar = faker.image.people() + "?random=" + Date.now();
         var description = faker.lorem.sentence();
-        setUser({
+        login({
             name,
             avatar,
             description,
         });
-        //login(user);
     }
 
     const onLogout = () => {
-        setUser({
+        logout({
             name: "",
             avatar: "",
             description: "",
@@ -31,9 +26,9 @@ const User = ({ login }) => {
 
     if(user.name !== "") {
         return(
-            <div className="container">
+            <div className="mt-3">
                 <div className="card">
-                    <img alt="user_img" style={{ height: "100px" }} src={user.avatar}></img>
+                    <img alt="user_img" src={user.avatar}></img>
                     <div className="card-body">
                         <div className="card-title">
                             {user.name}

@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
-const MONGO_URI = process.env.MONGO_URI;
+const DATABASE_URI = process.env.DATABASE_URI;
 const { nanoid } = require('nanoid');
 
-mongoose.connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(DATABASE_URI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true, useFindAndModify: false });
 
 ArticleSchema = new mongoose.Schema({
     title: {
@@ -13,6 +13,9 @@ ArticleSchema = new mongoose.Schema({
     },
     date: {
         type: Date,
+    },
+    description: {
+        type: String,
     },
     content: {
         type: String,
@@ -37,4 +40,4 @@ ArticleSchema.pre('validate', function(){
 });
 
 
-module.exports = mongoose.model('article', ArticleSchema);
+module.exports = mongoose.model('jwt_mern_article', ArticleSchema);

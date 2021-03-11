@@ -1,50 +1,46 @@
-import React, { useEffect } from 'react';
-import axios from 'axios';
+import React from 'react';
+import faker from 'faker';
 
-const Articles = ({ setFlashMessage }) => {
-    const [articles, setArticles] = React.useState([{
-        title: "test",
-        author: "me",
-        description: "AAAA",
-        date: "2000/00/00",
-        comment: "5",
-        like: "3",
-        dislike: "2",
-    }]);
+const Articles = ({ articlePost, user, articles, toArticle, deletePost }) => {
+    
 
-    // useEffect(() => {
-    //     axios.get('/api/article')
-    //         .then(res => {
-    //             if(res.data.type === 'success') {
-    //                 setArticles(res.data.articles);
-    //             } else {
-    //                 setFlashMessage(res.data.flashMessage);
-    //             }
-    //         })
-    // }, []);
+    
 
-
+    const addPost = () => {
+        var article = {
+            "title": faker.lorem.sentence(),
+            "author":  user.name,
+            "description": faker.lorem.paragraph(),
+            "content": faker.lorem.paragraphs(),
+            "comment": 0,
+            "like": 0,
+            "dislike": 0, 
+        }
+        articlePost(article);
+    }
 
     const renderArticles = () => {
         return articles.map((article) => {
             return(
-                <div className="card">
+                <div key={article.nanoID} className="card">
                     <div className="card-body">
                         <div className="card-title">
-                            {article.title}
+                            Title : {article.title}
                         </div>
                         <div className="card-text">
-                            {article.date}
+                            Date : {article.date}
                         </div>
                         <div className="card-text">
-                            {article.author}
+                            Author : {article.author}
                         </div>
                         <div className="card-text">
-                            {article.content}
+                            Description : {article.description}
                         </div>
                         <div className="card-text">
-                            {article.comment}{article.like}{article.dislike}
+                            Comment : {article.comment} Like : {article.like} Dislike : {article.dislike}
                         </div>
+                        <div className="btn btn-success mt-3"  onClick={()=>{toArticle(article)} } > Read </div>
+                        <div className="btn btn-danger mt-3"  onClick={()=>{deletePost(article.nanoID)}} > Delete </div>
                     </div>
                 </div>
             );
@@ -52,9 +48,14 @@ const Articles = ({ setFlashMessage }) => {
     }
 
     return(
-        <div>
-            <button className="btn btn-primary"></button>
-            {renderArticles()}
+        <div className="mt-3">
+            <div className="mb-3">
+                <button className="btn btn-primary" onClick={addPost}>New Post</button>
+            </div>
+            <div className="mb-3">
+                {renderArticles()}
+            </div>
+            
         </div>
     );
 }

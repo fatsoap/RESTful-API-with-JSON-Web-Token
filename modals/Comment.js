@@ -1,14 +1,14 @@
 const mongoose = require('mongoose');
-const MONGO_URI = process.env.MONGO_URI;
+const DATABASE_URI = process.env.DATABASE_URI;
 const { nanoid } = require('nanoid');
 
-mongoose.connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(DATABASE_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 
 CommentSchema = new mongoose.Schema({
     articleID:{
         type: String,
     },
-    content:{
+    comment:{
         type: String,
     },    
     author:{
@@ -16,6 +16,9 @@ CommentSchema = new mongoose.Schema({
     },
     date: {
         type: Date,
+    },
+    like: {
+        type: Boolean,
     },
     nanoID: {
         type: String,
