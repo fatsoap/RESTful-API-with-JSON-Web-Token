@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom';
 import axios from 'axios';
 import faker from 'faker';
 
+import * as controller from './controller/controller';
+
 import User from './User';
 import Articles from './Articles';
 import Article from './Article';
@@ -10,94 +12,42 @@ import Article from './Article';
 
 const App = () => {
     
-    const [token, setToken] = React.useState(null);
     const [flashMessage, setFlashMessage] = React.useState([]);
-    const [user, setUser] = React.useState({
-        name: "",
-        avatar: "",
-        description: "",
-    });
+    const [user, setUser] = React.useState(null);
     const [articles, setArticles] = React.useState([]);
     const [selectedArticle, setSelectedArticle] = React.useState(null);
     const [comments, setComments] = React.useState([]);
 
     React.useEffect(() => {
-        if(localStorage.getItem('token') !== null){
-            setToken(localStorage.getItem('token'));
-        }
+        setUser(controller.getUser());
     }, []);
 
-    const login = (user) => {
-        setUser(user);
-        axios.post('/api/user', { user })
-            .then(res => {
-                setToken(res.data.token);
-                localStorage.setItem('token', token);
-                setFlashMessage([res.data.flashMessage, res.data.type]);
-       
-            })
-    }
-
-    const logout = (user) => {
-        setUser(user);
-        localStorage.setItem('token', null);
-        setToken(null);
-        axios.post('/api/user?_method=delete')
-            .then(res => {
-                setFlashMessage([res.data.flashMessage, res.data.type]);
-            })
-    }
-
-    useEffect(() => {
-        axios.get('/api/article')
-            .then(res => {
-                if(res.data.type === 'success') {
-                    setArticles(res.data.articles);
-                }
-            })
-        if(selectedArticle !== null){
-            axios.get(`/api/comment/${selectedArticle.nanoID}`)
-                .then(res => {
-                    setComments(res.data.comments);
-                })
-        }
+    React.useEffect(() => {
+        controller.getArticle(setArticles, selectedArticle, setComments);
     }, [flashMessage]);
-        
-    
+
+    const login = (user) => {
+        controller.login(user, setUser, setFlashMessage);
+    }
+
+    const logout = () => {
+        controller.logout(setUser, setFlashMessage);  
+    }
 
     const articlePost = (article) => {
-        axios.post('/api/article', { article, token })
-            .then(res => {
-                setFlashMessage([res.data.flashMessage, res.data.type]);
-            })
+        controller.postArticle(article, setFlashMessage);
     }
 
     const toArticle = (article) => {
-        setSelectedArticle(article);
-        axios.get(`/api/comment/${article.nanoID}`)
-            .then(res => {
-                console.log(res.data.comments);
-                setComments(res.data.comments);
-            })
+        controller.selectArticle(article, setSelectedArticle, setComments);
     }
 
     const deletePost = (nanoID) => {
-        axios.post('/api/article?_method=delete', { nanoID, token })
-            .then(res => {
-                setFlashMessage([res.data.flashMessage, res.data.type]);
-                setSelectedArticle(null);
-            })
+        controller.deleteArticle(nanoID, setFlashMessage, setSelectedArticle);
     }
 
     const addComment = (articleID) => {
-        var sentence = faker.lorem.sentence();
-        var author = user.author;
-        var like = ( Math.random() < 0.5 );
-        var comment = { articleID, comment: sentence, author, like};
-        axios.post('/api/comment', { comment, token } )
-            .then(res => {
-                setFlashMessage([res.data.flashMessage, res.data.type]);
-            })
+        controller.postComment(articleID, user, setFlashMessage);
     }
 
     return(

@@ -1,6 +1,19 @@
 const jwt = require('jsonwebtoken');
 const SECRET_JWT = process.env.SECRET_JWT;
 
+function getUser(req, res, next) {
+    const token = req.headers.authorization.split(' ')[1];
+    jwt.verify(token, SECRET_JWT, (err, decode) => {
+        if(err) {
+            res.send({ user: decode, flashMessage: "token wrong!", type: "danger" });
+            return
+        } else {
+            req.user = decode;
+            next();
+        }
+    })
+}
+
 function getJWT(req, res, next){
     var data = req.body;
     jwt.sign(data, SECRET_JWT, { expiresIn: '10min'}, (err, token) => {
@@ -15,7 +28,8 @@ function getJWT(req, res, next){
 }
 
 function checkJWT(req, res, next){
-    jwt.verify(req.body.token, SECRET_JWT, (err, decode) => {
+    const token = req.headers.authorization.split(" ")[1];
+    jwt.verify(token, SECRET_JWT, (err, decode) => {
         if(err) {
             res.send({  flashMessage: "token validate fail", type: "danger" });
             return;
@@ -27,6 +41,7 @@ function checkJWT(req, res, next){
 }
 
 module.exports = {
+    getUser,
     getJWT,
     checkJWT
 }

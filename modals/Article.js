@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const DATABASE_URI = process.env.DATABASE_URI;
 const { nanoid } = require('nanoid');
 
-mongoose.connect(DATABASE_URI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true, useFindAndModify: false });
+//mongoose.connect(DATABASE_URI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true, useFindAndModify: false });
 
 ArticleSchema = new mongoose.Schema({
     title: {

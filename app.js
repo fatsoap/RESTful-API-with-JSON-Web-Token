@@ -3,101 +3,53 @@ const express = require('express');
 const app = express();
 const PORT = process.env.PORT || 3000;
 const path = require('path');
-const JWT = require('jsonwebtoken');
-const methodOverride = require('method-override');
-const { checkJWT, getJWT } = require('./controllers/app_controller')
 
-const Article = require('./modals/Article');
-const Comment = require('./modals/Comment');
+//restful api
+const methodOverride = require('method-override');
+
+//connect mongodb
+const mongoose = require('mongoose');
+
+//import middleware & controller
+const { getUser, checkJWT, getJWT } = require('./middleware/index');
+const controller = require('./controllers/index');
+
 
 app.use(express.static(path.join(__dirname, "./client/build")));
 app.use(express.json());
 app.use(methodOverride('_method'));
 
+const DATABASE_URI = process.env.DATABASE_URI;
+mongoose.connect(DATABASE_URI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true, useFindAndModify: false });
+
+//getUser
+app.get('/api/user', getUser, controller.getUser);
+
 //login
-app.post('/api/user', getJWT, (req, res) => {
-    res.send({ token: req.token, flashMessage: "login success", type: "success"  });
-});
+app.post('/api/user', getJWT, controller.login);
 
 //logout
-app.delete('/api/user', (req, res) => {
-    //do nothing
-    res.send({ flashMessage: "logout success", type: "success" });
-});
+app.delete('/api/user', controller.logout);
 
 //get articles
-app.get('/api/article',  async (req ,res) => {
-    try{
-        var articles = await Article.find().sort({'date': -1});
-        res.send({ articles: articles, flashMessage: "get articles success", type: "success" });
-    } catch(err) {
-
-        res.send({  flashMessage: "db get articles fail", type: "danger" });
-    }
-});
+app.get('/api/article',  controller.getArticles);
 
 //post article
-app.post('/api/article', checkJWT, async (req, res) => {
-    try{
-        var article = new Article(req.body.article);
-        await article.save();
-        res.send({ flashMessage: "post article success", type: "success" });
-    } catch(err) {
-        res.send({ flashMessage: "post article fail", type: "danger" });
-    }
-});
+app.post('/api/article', checkJWT, controller.postArticle);
 
 //delete article
-app.delete('/api/article', checkJWT, async (req, res) => {
-    try{
-        var articleID = req.body.nanoID;
-        await Article.findOneAndDelete({ nanoID: articleID });
-        await Comment.findOneAndDelete({ articleID: articleID });
-        res.send({ flashMessage: "delete article success", type: "success" });
-    } catch(err) {
-        res.send({ flashMessage: "delete article fail", type: "danger" });
-    }
-});
+app.delete('/api/article', checkJWT, controller.deleteArticle);
 
 //get commments
-app.get('/api/comment/:id', async (req ,res) => {
-    try{
-        var comments = await Comment.find({ articleID: req.params.id }).sort({ 'date': -1 });
-        res.send({ comments: comments, flashMessage: "get comments success", type: "success" });
-    } catch(err) {
-        res.send({ flashMessage: "db get comments fail", type: "danger" });
-    }
-});
+app.get('/api/comment/:id', controller.getComments);
 
 //post comment
-app.post('/api/comment', checkJWT, async (req, res) => {
-    try{
-        var comment = new Comment(req.body.comment);
-        await comment.save();
-        var increase = comment.like? 'like':'dislike';
-        if(comment.like) {
-            var article = await Article.findOneAndUpdate({ nanoID : comment.articleID }, {$inc: { 'comment': 1, 'like': 1 } } );
-        } else {
-            var article = await Article.findOneAndUpdate({ nanoID : comment.articleID }, {$inc: { 'comment': 1, 'dislike': 1 } } );
-        }        
-        res.send({ flashMessage: "post comment success", type: "success" });
-    } catch(err) {
-        console.log(err);
-        res.send({ flashMessage: "post comment fail", type: "danger" });
-    }
-});
+app.post('/api/comment', checkJWT, controller.postComment);
 
 //delete comment
-app.delete('/api/comment', checkJWT, (req, res) => {
-    try{
-        var commentID = req.body.id;
-        //await article.deleteById({ nanoID: commentID });
-        res.send({ flashMessage: "delete comment success", type: "success" });
-    } catch(err) {
-        res.send({ flashMessage: "delete comment fail", type: "danger" });
-    }
-});
+app.delete('/api/comment', checkJWT, controller.deleteComment);
 
+//react frontend
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, './client/build/index.html'));
 })
