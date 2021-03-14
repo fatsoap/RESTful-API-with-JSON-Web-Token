@@ -1,24 +1,7 @@
 import React from 'react';
-import faker from 'faker';
 
 const Articles = ({ articlePost, user, articles, toArticle, deletePost }) => {
     
-
-    
-
-    const addPost = () => {
-        var article = {
-            "title": faker.lorem.sentence(),
-            "author":  user.name,
-            "description": faker.lorem.paragraph(),
-            "content": faker.lorem.paragraphs(),
-            "comment": 0,
-            "like": 0,
-            "dislike": 0, 
-        }
-        articlePost(article);
-    }
-
     const renderArticles = () => {
         return articles.map((article) => {
             return(
@@ -50,7 +33,7 @@ const Articles = ({ articlePost, user, articles, toArticle, deletePost }) => {
     return(
         <div className="mt-3">
             <div className="mb-3">
-                <button className="btn btn-primary" onClick={addPost}>New Post</button>
+                <button className="btn btn-primary" onClick={articlePost}>New Post</button>
             </div>
             <div className="mb-3">
                 {renderArticles()}

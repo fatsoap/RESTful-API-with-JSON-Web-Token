@@ -1,13 +1,11 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
-import axios from 'axios';
-import faker from 'faker';
 
 import * as controller from './controller/controller';
 
-import User from './User';
-import Articles from './Articles';
-import Article from './Article';
+import User from './components/User';
+import Articles from './components/Articles';
+import Article from './components/Article';
 
 
 const App = () => {
@@ -24,18 +22,18 @@ const App = () => {
 
     React.useEffect(() => {
         controller.getArticle(setArticles, selectedArticle, setComments);
-    }, [flashMessage]);
+    }, [flashMessage, selectedArticle]);
 
-    const login = (user) => {
-        controller.login(user, setUser, setFlashMessage);
+    const login = () => {
+        controller.login(setUser, setFlashMessage);
     }
 
     const logout = () => {
         controller.logout(setUser, setFlashMessage);  
     }
 
-    const articlePost = (article) => {
-        controller.postArticle(article, setFlashMessage);
+    const articlePost = () => {
+        controller.postArticle(user, setFlashMessage);
     }
 
     const toArticle = (article) => {

@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const DATABASE_URI = process.env.DATABASE_URI;
+//const DATABASE_URI = process.env.DATABASE_URI;
 const { nanoid } = require('nanoid');
 
 //mongoose.connect(DATABASE_URI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true, useFindAndModify: false });
@@ -40,4 +40,4 @@ ArticleSchema.pre('validate', function(){
 });
 
 
-module.exports = mongoose.model('jwt_mern_article', ArticleSchema);
+module.exports = mongoose.model('RESTful_api_article', ArticleSchema);

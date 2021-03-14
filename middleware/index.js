@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const SECRET_JWT = process.env.SECRET_JWT;
 
-function getUser(req, res, next) {
+function decodeUser(req, res, next) {
     const token = req.headers.authorization.split(' ')[1];
     jwt.verify(token, SECRET_JWT, (err, decode) => {
         if(err) {
@@ -41,7 +41,7 @@ function checkJWT(req, res, next){
 }
 
 module.exports = {
-    getUser,
+    decodeUser,
     getJWT,
     checkJWT
 }

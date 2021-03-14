@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const DATABASE_URI = process.env.DATABASE_URI;
+//const DATABASE_URI = process.env.DATABASE_URI;
 const { nanoid } = require('nanoid');
 
 //mongoose.connect(DATABASE_URI, { useNewUrlParser: true, useUnifiedTopology: true });
@@ -30,4 +30,4 @@ CommentSchema.pre('validate', function(){
     this.date = new Date();
 });
 
-module.exports = mongoose.model('comment', CommentSchema);
+module.exports = mongoose.model('RESTful_api_comment', CommentSchema);

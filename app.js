@@ -11,8 +11,16 @@ const methodOverride = require('method-override');
 const mongoose = require('mongoose');
 
 //import middleware & controller
-const { getUser, checkJWT, getJWT } = require('./middleware/index');
-const controller = require('./controllers/index');
+const { decodeUser, checkJWT, getJWT } = require('./middleware/index');
+const {
+    getUser,
+    getArticles,
+    postArticle,
+    deleteArticle,
+    getComments,
+    postComment,
+    deleteComment
+} = require('./controllers/index');
 
 
 app.use(express.static(path.join(__dirname, "./client/build")));
@@ -23,31 +31,30 @@ const DATABASE_URI = process.env.DATABASE_URI;
 mongoose.connect(DATABASE_URI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true, useFindAndModify: false });
 
 //getUser
-app.get('/api/user', getUser, controller.getUser);
-
+app.get('/api/user', decodeUser, getUser);
 //login
-app.post('/api/user', getJWT, controller.login);
+app.post('/api/user', getJWT, login);
 
 //logout
-app.delete('/api/user', controller.logout);
+app.delete('/api/user', logout);
 
 //get articles
-app.get('/api/article',  controller.getArticles);
+app.get('/api/article',  getArticles);
 
 //post article
-app.post('/api/article', checkJWT, controller.postArticle);
+app.post('/api/article', checkJWT, postArticle);
 
 //delete article
-app.delete('/api/article', checkJWT, controller.deleteArticle);
+app.delete('/api/article', checkJWT, deleteArticle);
 
 //get commments
-app.get('/api/comment/:id', controller.getComments);
+app.get('/api/comment/:id', getComments);
 
 //post comment
-app.post('/api/comment', checkJWT, controller.postComment);
+app.post('/api/comment', checkJWT, postComment);
 
 //delete comment
-app.delete('/api/comment', checkJWT, controller.deleteComment);
+app.delete('/api/comment', checkJWT, deleteComment);
 
 //react frontend
 app.get('*', (req, res) => {

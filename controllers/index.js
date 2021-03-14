@@ -1,24 +1,25 @@
-const Article = require('./modals/Article');
-const Comment = require('./modals/Comment');
+const Article = require('../modals/Article');
+const Comment = require('../modals/Comment');
 
 
 //getUser
-export const getUser = (req, res) => {
+function getUser (req, res) {
     res.send({ user: req.user, flashMessage: "get User done!", type: "success" });
-}
+};
+
 //login
-export const login = (req, res) => {
+function login  (req, res) {
     res.send({ token: req.token, flashMessage: "login success", type: "success"  });
 };
 
 //logout
-export const logout = (req, res) => {
+function logout  (req, res) {
     //do nothing
     res.send({ flashMessage: "logout success", type: "success" });
 };
 
 //get articles
-export const getArticles =  async (req ,res) => {
+async function getArticles  (req, res) {
     try{
         var articles = await Article.find().sort({'date': -1});
         res.send({ articles: articles, flashMessage: "get articles success", type: "success" });
@@ -29,7 +30,7 @@ export const getArticles =  async (req ,res) => {
 };
 
 //post article
-export const postArticle =  async (req, res) => {
+async function  postArticle (req, res) {
     try{
         var article = new Article(req.body);
         await article.save();
@@ -40,11 +41,11 @@ export const postArticle =  async (req, res) => {
 };
 
 //delete article
-export const deleteArticle =  async (req, res) => {
-    try{
-        var articleID = req.body;
+async function  deleteArticle (req, res) {
+    try{       
+        var articleID = req.body.nanoID;
         await Article.findOneAndDelete({ nanoID: articleID });
-        await Comment.findOneAndDelete({ articleID: articleID });
+        await Comment.deleteMany({ articleID: articleID });
         res.send({ flashMessage: "delete article success", type: "success" });
     } catch(err) {
         res.send({ flashMessage: "delete article fail", type: "danger" });
@@ -52,7 +53,7 @@ export const deleteArticle =  async (req, res) => {
 };
 
 //get commments
-export const getComments = async (req ,res) => {
+async function  getComments (req, res) {
     try{
         var comments = await Comment.find({ articleID: req.params.id }).sort({ 'date': -1 });
         res.send({ comments: comments, flashMessage: "get comments success", type: "success" });
@@ -62,9 +63,9 @@ export const getComments = async (req ,res) => {
 };
 
 //post comment
-export const postComment = async (req, res) => {
+async function  postComment (req, res) {
     try{
-        var comment = new Comment(req.body.comment);
+        var comment = new Comment(req.body);
         await comment.save();
         var increase = comment.like? 'like':'dislike';
         if(comment.like) {
@@ -80,7 +81,7 @@ export const postComment = async (req, res) => {
 };
 
 //delete comment
-export const deleteComment = (req, res) => {
+async function  deleteComment (req, res) {
     try{
         var commentID = req.body.id;
         //await article.deleteById({ nanoID: commentID });
@@ -89,3 +90,15 @@ export const deleteComment = (req, res) => {
         res.send({ flashMessage: "delete comment fail", type: "danger" });
     }
 };
+
+module.exports = {
+    getUser,
+    login,
+    logout,
+    getArticles,
+    postArticle,
+    deleteArticle,
+    getComments,
+    postComment,
+    deleteComment
+}
