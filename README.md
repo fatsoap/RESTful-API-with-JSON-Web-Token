@@ -8,30 +8,32 @@
 
 #### Json Web Token :custard:
 
-> Use jwt to verify Post and Delete actions :memo:
-
-#### Separate Front-end & Back-end  :airplane:
-
-> MERN structure : React as frontend & Node.js as backend to achieve front-end & back-end separate structure :zap:
-
+> Use JWT to verify actions :memo:
 #### RESTful API :speaker:
 
-> Connected Frontend & Backend with RESTful API, and with method-override to achieve :heart:
+> Connected Frontend & Backend with RESTful API :heart:
+
+#### Separate Frontend & Backend  :airplane:
+
+> Frontend(React.js) & Backend(Node.js) separate structure :zap:
 
 #### MVC structure :hammer:
 
-> custom controller to check json-web-token and authorize actions  :rocket:
-> Mongoose as Modal :wrench:
-> React as View :thumbsup:
-
+> Modal-View-Controller structure in both frontend & backend :rocket:
 
 #### React Component lifecycle
 
-> Using Hooks to achieve lifecycle of React component ( getComments while Mount, deleteComments while Unmount ) :ocean:
+> Using Hooks to achieve lifecycle of React function components :ocean:
 
 #### faker.js
 
 > random generate user and post and comment :rabbit:
+
+## What I learned from this project
+
+1. How to design a RESTful API
+2. Usage of JSON web token
+3. Improve Coding Style by design MVC structure
 
 ## How 2 install
 
